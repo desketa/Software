@@ -65,18 +65,18 @@ void OpenChair::writeMotor1(double inSpeed, int motOn){
             //Due to the time taken by the format function to change,
             //the values are affected 5 cycles later which is why we
             //put their calls where they are instead of surrounding the start byte
-//            motor1.putc(00);//Start byte
-//            motor1.putc(sp[1]);
-//            motor1.format(8,SerialBase::None,2); //Expects 9bit, 1stop, receives 8bit,2stop -> MSB=first stop bit=1
-//            motor1.putc(sp[0]);
-//            motor1.format(9);
-//            motor1.putc(sp[1]);
-//            motor1.putc(sp[0]);
-//            if(motOn==1) motor1.putc(0x55);//End byte
-//            if(motOn==0) motor1.putc(0x00);//End byte
-//            motor1.putc(91);
-//            motor1.putc(91);
-//
+            motor1.putc(00);//Start byte
+            motor1.putc(sp[1]);
+            motor1.format(8,SerialBase::None,2); //Expects 9bit, 1stop, receives 8bit,2stop -> MSB=first stop bit=1
+            motor1.putc(sp[0]);
+            motor1.format(9);
+            motor1.putc(sp[1]);
+            motor1.putc(sp[0]);
+            if(motOn==1) motor1.putc(0x55);//End byte
+            if(motOn==0) motor1.putc(0x00);//End byte
+            motor1.putc(91);
+            motor1.putc(91);
+
     //     }
     // }
     // if(motor1In==7) firstTime=1;
