@@ -16,10 +16,6 @@ int main() {
       valueX= (double) 0.25;
       valueY= (double) 0;
 
-
-
-
-
       chair.drive(valueX, valueY, 1);
       wait_ms(50);
     }
