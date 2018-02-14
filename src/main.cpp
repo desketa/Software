@@ -1,3 +1,21 @@
+/*
+whe have:
+- 2 inputs
+    (1)hombremuerto: when this pin is low --> stops. to run it must be at high.
+      this is for saefty
+    (2)cambiarmarcha: change speed. we have 3 steeps in loop
+                ->- marcha1 -> marcha2 --> marcha3 -->-
+               |--------------------<------------<-----|
+
+- 2 outputs
+    (1)ledmarcha1
+    (2)ledmarcha2
+        ledmarcha1 = 1 & ledmarcha2 = 0  ---> speed 1;
+        ledmarcha1 = 0 & ledmarcha2 = 1  ---> speed 2;
+        ledmarcha1 = 1 & ledmarcha2 = 1  ---> speed 3;
+
+*/
+
 #include "mbed.h"
 #include "OpenChair.h"
 
@@ -37,10 +55,14 @@ ledmarcha2.write(0);
     while(1){
           pc.printf("%f \t %d\n", hombremuerto, marcha);
 
+          //the pin of "hombremuerto" must be at HIGH.
           if( hombremuerto == 1 ){
           pc.printf("hombre muerto habilitado \t");
 
+            //if we press the button "cambiarmarcha" to change speed
             if (cambiarmarcha == 1)  {
+
+                  //if we are in speed0 (stopped) --> we change to speed1
                    if (marcha == 0){
                         marcha = 1;
                         ledmarcha1.write(1);
@@ -48,6 +70,8 @@ ledmarcha2.write(0);
                         //ledmarcha3.write(0);
                         pc.printf("MARCHA 1\n");
                         acelera(marcha1);  }
+
+                    //if we are in speed1 --> we change to speed2
                     else if (marcha == 1){
                         marcha = 2;
                         ledmarcha1.write(0);
@@ -55,13 +79,16 @@ ledmarcha2.write(0);
                         //ledmarcha3.write(0);
                         pc.printf("MARCHA 2\n");
                         acelera(marcha2);  }
+
+                    //if we are in speed2 --> we change to speed3
                     else if (marcha == 2){
                         marcha = 3;
                         ledmarcha1.write(1);
                         ledmarcha2.write(1);
-                        //ledmarcha3.write(1);
                         pc.printf("MARCHA 3\n");
                         acelera(marcha3); }
+
+                    //if we are in speed3 --> we change to speed1 (LOOP)
                     else if (marcha == 3){
                         marcha = 1;
                         ledmarcha1.write(1);
@@ -70,19 +97,20 @@ ledmarcha2.write(0);
                         pc.printf("MARCHA 1\n");
                         frena(marcha2+marcha3);         }
 
+                    //OTHERWISE IS AN ERROR
                     else{
                         pc.printf("- - - - ERROR - - - - \n");
                         }
                     }
 
-            //parado
+          //stopped
           else{
             pc.printf("mantementos\n");
             manten();
           }
         }
 
-        //valor pot muy bajo. paramos silla
+        //we stops
         else{
             pc.printf("hombre muerto no pulsado. Paramos.\n");
 
@@ -119,6 +147,7 @@ ledmarcha2.write(0);
 
 //------------------------------------------
 
+//decrease the speed
 void frena(int z){
 
   for(int i=0; i<z; i++){
@@ -129,6 +158,8 @@ void frena(int z){
       }
 }
 
+
+//increase the speed
 void acelera(int z){
 
   for(int i=0; i<(2*z); i++){
@@ -140,6 +171,7 @@ void acelera(int z){
 }
 
 
+//holds speed
 void manten(void){
   chair.writeMotor1( 0, (int)1);
   chair.writeMotor2( 0, (int)1);
