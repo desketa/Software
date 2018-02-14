@@ -36,35 +36,23 @@ void OpenChair::drive(double steering, double throttle,int mode){
     motA=constrain(motATS+motAS, -1, 1);
     motB=constrain(motBTS+motBS, -1, 1);
 
-    writeMotor1(-motA);
+    //writeMotor1(-motA);
+    writeMotor1(motA);
     writeMotor2(motB);
 
-    pc.printf("Motor A, B: %.02f    %.02f\n",motA,motB);
+    //pc.printf("Motor A, B: %.02f    %.02f\n",motA,motB);
 }
 
 
 void OpenChair::writeMotor1(double inSpeed, int motOn){
-    // inSpeed=constrain(inSpeed,-1,1);
 
-    if(inSpeed>=-0.02 && inSpeed<=0.02)
-        speed=0;
-    else if(inSpeed>0.02)
-        speed=doubleMap(inSpeed,0.02,1,minSpeed,maxSpeed);
-    else
-        speed=doubleMap(fabs(inSpeed),0.02,1,65535-minSpeed,65535-maxSpeed);  //0xFFFF=65535
+  speed = inSpeed;
 
     uint8_t sp[2];
     sp[0]=(speed >> 8) & 0xFF;
-    sp[1]=speed & 0xFF;
+    sp[1]= speed & 0xFF;
 
-    // char motor1In;
-    // static int firstTime=0;
-    // if(motor1.readable()){
-    //     motor1In=motor1.getc();
-    //     if(motor1In==7 || firstTime==0){
-            //Due to the time taken by the format function to change,
-            //the values are affected 5 cycles later which is why we
-            //put their calls where they are instead of surrounding the start byte
+
             motor1.putc(00);//Start byte
             motor1.putc(sp[1]);
             motor1.format(8,SerialBase::None,2); //Expects 9bit, 1stop, receives 8bit,2stop -> MSB=first stop bit=1
@@ -77,21 +65,12 @@ void OpenChair::writeMotor1(double inSpeed, int motOn){
             motor1.putc(91);
             motor1.putc(91);
 
-    //     }
-    // }
-    // if(motor1In==7) firstTime=1;
-    // pc.printf("A: %02x%02x\n",sp[1],sp[0]);
 }
 
 void OpenChair::writeMotor2(double inSpeed, int motOn){
     // inSpeed=constrain(inSpeed,-1,1);
 
-    if(inSpeed>=-0.02 && inSpeed<=0.02)
-        speed=0;
-    else if(inSpeed>0.02)
-        speed=doubleMap(inSpeed,0.02,1,minSpeed,maxSpeed);
-    else
-        speed=doubleMap(fabs(inSpeed),0.02,1,65535-minSpeed,65535-maxSpeed);  //0xFFFF=65535
+    speed = inSpeed;
 
     uint8_t sp[2];
     sp[0]=(speed >> 8) & 0xFF;
